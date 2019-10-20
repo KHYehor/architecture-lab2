@@ -3,7 +3,7 @@ export default abstract class Device {
   constructor(name: string) {
     this.name = name;
   };
-  abstract getData(count: number);
+  abstract getData();
   abstract sendData(battery, currentVideo, date);
 }
 

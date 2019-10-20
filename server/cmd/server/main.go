@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
-	"github.com/KHYehor/Za_stepuhu/Lab2/server/db"
+	"github.com/KHYehor/architecture-lab2/server/db"
 	"log"
 	"net/http"
 	"os"

@@ -30,7 +30,8 @@ func (s *TabletApiServer) Start() error {
 	}
 
 	handler := new(http.ServeMux)
-	handler.HandleFunc("/tablets", s.TabletsHandler)
+	handler.HandleFunc("/sendData", s.TabletsHandler)
+	handler.HandleFunc("/getData", s.TabletsHandler)
 
 	s.server = &http.Server{
 		Addr:    fmt.Sprintf(":%d", s.Port),

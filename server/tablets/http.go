@@ -2,7 +2,7 @@ package tablets
 
 import (
 	"encoding/json"
-	"github.com/KHYehor/Za_stepuhu/Lab2/server/tools"
+	"github.com/KHYehor/architecture-lab2/server/tools"
 	"log"
 	"net/http"
 )
@@ -16,7 +16,7 @@ func HttpHandler(store *Store) HttpHandlerFunc {
 		if r.Method == "GET" {
 			//handleListChannels(store, rw)
 		} else if r.Method == "POST" {
-			//handleChannelCreate(r, rw, store)
+			handleGetData(r, rw, store)
 		} else {
 			rw.WriteHeader(http.StatusMethodNotAllowed)
 		}

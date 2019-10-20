@@ -5,10 +5,10 @@ export default class Tablet extends Device {
   constructor(name) {
     super(name);
   };
-  public getData(count) {
-    requests.getData(count);
+  public getData() {
+    return requests.getData(this.name);
   }
   public sendData = (battery, currentVideo, date) => {
-    requests.sendData(battery, currentVideo, date);
+    return requests.sendData(this.name, battery, currentVideo, date);
   }
 }
