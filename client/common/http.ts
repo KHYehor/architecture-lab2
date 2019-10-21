@@ -1,19 +1,18 @@
 import fetch from 'node-fetch';
-const URL = 'http://localhost:8080';
 
 export default {
-  sendData: (name, battery, currentVideo, deviceTime) => (
+  sendData: (URL, name, battery, currentVideo, deviceTime) => (
     fetch(`${URL}/sendData`, {
       method: 'POST',
       body: JSON.stringify({ name, battery, currentVideo, deviceTime }),
       headers: { 'Content-Type': 'application/json' }
-    })
+    }).then(res => res.json())
   ),
-  getData: name => (
+  getData: (URL, name) => (
     fetch(`${URL}/getData`, {
       method: 'POST',
       body: JSON.stringify({name}),
       headers: { 'Content-Type': 'application/json' }
-    })
+    }).then(res => res.json())
   )
 };
