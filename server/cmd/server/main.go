@@ -16,7 +16,7 @@ func NewDbConnection() (*sql.DB, error) {
 	conn := &db.Connection{
 		DbName:     "tablets",
 		User:       "ykh2k",
-		Password:		"1111",
+		Password:   "1111",
 		Host:       "localhost",
 		DisableSSL: true,
 	}
