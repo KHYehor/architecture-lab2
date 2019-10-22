@@ -4,11 +4,12 @@
   "description": "LAB2 Client",
   "main": "example.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "tsc && node build/example.js"
   },
   "author": "KHYehor",
   "license": "MIT",
   "dependencies": {
+    "@types/node-fetch": "^2.5.2",
     "node-fetch": "^2.6.0"
   }
 }

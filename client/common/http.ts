@@ -1,18 +1,18 @@
 import fetch from 'node-fetch';
 
 export default {
-  sendData: (URL, name, battery, currentVideo, deviceTime) => (
+  sendData: (URL: string, name: string, battery: string, currentVideo: string, deviceTime: Date) => (
     fetch(`${URL}/sendData`, {
       method: 'POST',
       body: JSON.stringify({ name, battery, currentVideo, deviceTime }),
       headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json())
+    }).then((res: any) => res.json())
   ),
-  getData: (URL, name) => (
+  getData: (URL: string, name: string) => (
     fetch(`${URL}/getData`, {
       method: 'POST',
       body: JSON.stringify({name}),
       headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json())
+    }).then((res: any) => res.json())
   )
 };

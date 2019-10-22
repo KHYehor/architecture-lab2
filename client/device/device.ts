@@ -5,7 +5,7 @@ export default abstract class Device {
     this.URL = URL;
     this.name = name;
   };
-  abstract getData();
-  abstract sendData(battery, currentVideo, date);
+  abstract getData(): Promise<any>;
+  abstract sendData(battery: string, currentVideo: string, date: Date): Promise<any>;
 }
 
