@@ -44,11 +44,13 @@ func (s *Store) getData(tablet *Tablet) (*Response, error) {
 }
 
 func (s *Store) setData(sdata *SendData) error {
+	// IF tablet not exist -> crete it
+	// timer data
 	_, err := s.Db.Exec(`
 		INSERT INTO TabletsState 
-			(battery, devicetime, servertime, currentvideo, tebletid) 
+			("battery", "devicetime", "servertime", "currentvideo", "tabletid") 
 		VALUES 
-			($1, $2, CURRENT_TIMESTAMP, $3, (SELECT id FROM TabletsList WHERE name = '$4'))`,
+			($1, $2, CURRENT_TIMESTAMP, $3, (SELECT id FROM TabletsList WHERE name = $4))`,
 		sdata.Battery, sdata.DeviceTime, sdata.CurrentVideo, sdata.Name)
 	return err
 }
