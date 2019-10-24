@@ -20,3 +20,18 @@ Tablet1.sendData("49%", "currentVideo", new Date())
 
 Tablet1.sendData("39%", "currentVideo", new Date())
   .then(console.log, console.error);
+
+const Tablet2 = new Tablet(URL, 'class1-tablet1');
+
+Tablet2.sendData("89%", "currentVideo", new Date())
+  .then(console.log, console.error);
+
+Tablet2.sendData("49%", "currentVideo", new Date())
+  .then(console.log, console.error);
+
+Tablet2.sendData("39%", "currentVideo", new Date())
+  .then(console.log, console.error);
+
+Tablet2.getData()
+  .then(console.log, console.error);
+
