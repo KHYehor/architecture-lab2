@@ -5,10 +5,6 @@ import Tablet from './device/tablet';
 const URL = 'http://localhost:8080';
 const Tablet1 = new Tablet(URL, 'class1-tablet2');
 
-// const tabletCycle = tablet => {
-
-// }
-
 Tablet1.getData()
   .then(console.log, console.error);
 

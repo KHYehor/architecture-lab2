@@ -2,58 +2,27 @@ package tablets
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
-	"reflect"
 )
 
 func NewStore(db *sql.DB) *Store {
 	return &Store{Db: db}
 }
 
-// NullInt64 is an alias for sql.NullInt64 data type
-type NullInt64 sql.NullInt64
-
-// Scan implements the Scanner interface for NullInt64
-func (ni *NullInt64) Scan(value interface{}) error {
-	var i sql.NullInt64
-	if err := i.Scan(value); err != nil {
-		return err
-	}
-
-	// if nil then make Valid false
-	if reflect.TypeOf(value) == nil {
-		*ni = NullInt64{i.Int64, false}
-	} else {
-		*ni = NullInt64{i.Int64, true}
-	}
-	return nil
-}
-
-// MarshalJSON for NullInt64
-func (ni *NullInt64) MarshalJSON() ([]byte, error) {
-	if !ni.Valid {
-		return []byte("null"), nil
-	}
-	return json.Marshal(ni.Int64)
-}
-
-// UnmarshalJSON for NullInt64
-func (ni *NullInt64) UnmarshalJSON(b []byte) error {
-	err := json.Unmarshal(b, &ni.Int64)
-	ni.Valid = (err == nil)
-	return err
-}
-
+// GET request
 func (s *Store) getData(tablet *Tablet) (*Response, error) {
+	// Init response
 	var response Response
 	response.Name = tablet.Name
-	// First query
+	// Check if tablet exists
 	row := s.Db.QueryRow(`SELECT id FROM TabletsList WHERE name=$1`, tablet.Name)
-	if err := row.Scan(&response.Id); err != nil {
+	err := row.Scan(&response.Id)
+	if err != nil && err != sql.ErrNoRows {
 		return nil, err
+	} else if err == sql.ErrNoRows {
+		// Tablet not found
+		return &response, nil
 	}
-	// Second query
+	// Get all data with tablet
 	rows, err := s.Db.Query(`
 		SELECT 
 			battery, currentVideo, devicetime, servertime 
@@ -80,38 +49,28 @@ func (s *Store) getData(tablet *Tablet) (*Response, error) {
 	return &response, nil
 }
 
+// Post request
 func (s *Store) setData(sdata *SendData) error {
-	// IF tablet not exist -> crete it
-	// timer data
+	// Check if tablet exists
 	var id int64
 	row := s.Db.QueryRow(`SELECT id FROM TabletsList WHERE name = $1`, sdata.Name)
-	// fmt.Println(*row)
-	if err := row.Scan(&id); err != nil {
-		fmt.Scanln(id)
-		fmt.Println("Her222")
+	err := row.Scan(&id)
+	// If it doesnt, so create it
+	if err != sql.ErrNoRows && err != nil {
 		return err
-	}
-	if &id == nil {
+	} else if err == sql.ErrNoRows {
 		_, err := s.Db.Exec(`INSERT INTO TabletsList ("name") VALUES ($1)`, sdata.Name)
 		if err != nil {
 			return err
 		}
 		row = s.Db.QueryRow(`SELECT id FROM TabletsList WHERE name = $1`, sdata.Name)
 	}
-	if err := row.Scan(&id); err != nil {
-		return err
-	}
-	_, err := s.Db.Exec(`
+	// Insert Data linked to table
+	_, err = s.Db.Exec(`
   INSERT INTO TabletsState
    ("battery", "devicetime", "servertime", "currentvideo", "tabletid")
   VALUES
    ($1, $2, CURRENT_TIMESTAMP, $3, $4)`,
 		sdata.Battery, sdata.DeviceTime, sdata.CurrentVideo, id)
-	// _, err := s.Db.Exec(`
-	// 	INSERT INTO TabletsState
-	// 		("battery", "devicetime", "servertime", "currentvideo", "tabletid")
-	// 	VALUES
-	// 		($1, $2, CURRENT_TIMESTAMP, $3, (SELECT id FROM TabletsList WHERE name = $4))`,
-	// 	sdata.Battery, sdata.DeviceTime, sdata.CurrentVideo, sdata.Name)
 	return err
 }

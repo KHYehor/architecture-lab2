@@ -2,9 +2,11 @@ package tablets
 
 import (
 	"encoding/json"
-	"github.com/KHYehor/architecture-lab2/server/tools"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/KHYehor/architecture-lab2/server/tools"
 )
 
 // Channels HTTP handler.
@@ -13,7 +15,7 @@ type HttpHandlerFunc http.HandlerFunc
 // HttpHandler creates a new instance of channels HTTP handler.
 func HttpHandler(store *Store) HttpHandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		if  r.URL.String() == "/getData" {
+		if r.URL.String() == "/getData" {
 			handleGetData(r, rw, store)
 		} else if r.URL.String() == "/sendData" {
 			handleSendData(r, rw, store)
@@ -37,6 +39,8 @@ func handleSendData(r *http.Request, rw http.ResponseWriter, store *Store) {
 	} else {
 		tools.WriteJsonOk(rw, "ok")
 	}
+	// Next request timeout
+	time.Sleep(10 * time.Second)
 }
 
 func handleGetData(r *http.Request, rw http.ResponseWriter, store *Store) {
